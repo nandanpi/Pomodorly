@@ -19,6 +19,7 @@ const Timer = () => {
     const [quote, setQuote] = useState("");
     const [author, setAuthor] = useState("");
     const [showSettings, setShowSettings] = useState(false);
+    const [focusMode, setFocusMode] = useState(false);
     let interval = null;
 
 
@@ -94,6 +95,7 @@ const Timer = () => {
         if(currentRestNumber !== 1){
             setShowPermission(true);
             clearInterval(interval);
+            setFocusMode(false);
         }
     },[currentRestNumber, interval])
 
@@ -150,6 +152,10 @@ const Timer = () => {
         setShowSettings(!showSettings);
     }
 
+    function toggleFocusMode(){
+        setFocusMode(!focusMode);
+    }
+
     return(
         <>
             <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden" : "block"}>
@@ -165,10 +171,10 @@ const Timer = () => {
                 {nextTimer !== 10 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
             </div>
             <div>
-                <button onClick={toggleTimer}>{isRunning ? 'Stop' : 'Start'}</button>
+                <button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ? 'Stop' : 'Start'}</button>
             </div>
             <div>
-                <button onClick={resetTimer} className={showReset ? 'block' : 'hidden'}>Reset</button>
+                <button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}>Reset</button>
             </div>
             <div className={showPermission ? "block" : "hidden"}>
                 <button onClick={Continue}>
@@ -179,7 +185,7 @@ const Timer = () => {
                 </button>
             </div>
             <div>
-                <button onClick={toggleSettings}>Settings</button>
+                <button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}>Settings</button>
             </div>
             <div className={showSettings ? "block" : "hidden"}>
                 <div>
@@ -192,7 +198,16 @@ const Timer = () => {
                     <button onClick={toggleSettings}>X</button>
                 </div>
             </div>
+
             <div>
+                <button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}>Focus Mode</button>
+            </div>
+            <div>
+                <button onClick={toggleFocusMode} className={focusMode ? "block" : "hidden"}>X</button>
+            </div>
+
+
+            <div className={!focusMode ? "block" : "hidden"}>
                 <span>{quote}</span>
                 <span> - {author}</span>
             </div>
