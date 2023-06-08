@@ -18,7 +18,10 @@ const Timer = () => {
     const [showPermission, setShowPermission] = useState(false);
     const [quote, setQuote] = useState("");
     const [author, setAuthor] = useState("");
+    const [showSettings, setShowSettings] = useState(false);
     let interval = null;
+
+
     function toggleTimer() {
         setIsRunning(!isRunning);
         quoteAPI();
@@ -29,6 +32,7 @@ const Timer = () => {
         setIsRunning(false);
         setShowReset(false)
     }
+
     function inc(){
         if(currentTimer !== 0){
             if(!isRunning){
@@ -39,6 +43,7 @@ const Timer = () => {
                 setCurrentTimer(currentTimer+60);
         }
     }
+
     function dec(){
         if(!(currentTimer<=60)){
             if(!isRunning){
@@ -49,9 +54,11 @@ const Timer = () => {
                 setCurrentTimer(currentTimer-60);
         }
     }
+
     function pad(d){
         return (d < 10) ? '0' + d.toString() : d.toString();
     }
+
     useEffect(() => {
         if(isRunning){
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,11 +96,13 @@ const Timer = () => {
             clearInterval(interval);
         }
     },[currentRestNumber, interval])
+
     function Continue(){
         console.log("Continue");
         setShowPermission(false);
         setIsRunning(!isRunning);
     }
+
     function notContinue(){
         console.log("Not Continue");
         setShowPermission(false);
@@ -125,9 +134,7 @@ const Timer = () => {
         }
 
     }
-    // useEffect(() => {
-    //     quoteAPI();
-    // },[])
+
     useEffect(() => {
         const onLoad = () => {
             quoteAPI();
@@ -138,6 +145,11 @@ const Timer = () => {
             window.removeEventListener('load', onLoad);
         };
     }, []);
+
+    function toggleSettings(){
+        setShowSettings(!showSettings);
+    }
+
     return(
         <>
             <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden" : "block"}>
@@ -158,12 +170,6 @@ const Timer = () => {
             <div>
                 <button onClick={resetTimer} className={showReset ? 'block' : 'hidden'}>Reset</button>
             </div>
-            <div>
-                <button onClick={inc}>+</button>
-            </div>
-            <div>
-                <button onClick={dec}>-</button>
-            </div>
             <div className={showPermission ? "block" : "hidden"}>
                 <button onClick={Continue}>
                     Yes
@@ -171,6 +177,20 @@ const Timer = () => {
                 <button onClick={notContinue}>
                     No
                 </button>
+            </div>
+            <div>
+                <button onClick={toggleSettings}>Settings</button>
+            </div>
+            <div className={showSettings ? "block" : "hidden"}>
+                <div>
+                    <button onClick={inc}>+</button>
+                </div>
+                <div>
+                    <button onClick={dec}>-</button>
+                </div>
+                <div>
+                    <button onClick={toggleSettings}>X</button>
+                </div>
             </div>
             <div>
                 <span>{quote}</span>
