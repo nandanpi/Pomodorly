@@ -7,6 +7,7 @@ import {BsFullscreen} from "react-icons/bs";
 import {AiOutlineClose} from "react-icons/ai";
 import {TbTriangleFilled , TbTriangleInvertedFilled} from "react-icons/tb";
 import Switcher from "../Switcher";
+import Emoji from "../assets/Emoji.png";
 import {Link} from "react-router-dom";
 
 const Timer = () => {
@@ -285,6 +286,7 @@ const Timer = () => {
                     </div>
                 </div>
             </div>
+
             <div className={showSettings ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
                 <div className="flex justify-center items-center h-screen">
                     <div className="bg-white shadow-2xl rounded-xl grid space-y-5 p-5">
@@ -318,6 +320,30 @@ const Timer = () => {
                         </div>
                         <div onClick={notContinue} className="items-center justify-center flex">
                             Reset all the Sessions
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div  className={showPermission ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
+                <div className="flex justify-center items-center h-screen">
+                    <div className="bg-white shadow-2xl rounded-xl grid space-y-5 p-5 m-10 md:m-auto">
+                        <div className="flex justify-center items-center">
+                            <img src={Emoji} alt="#"/>
+                        </div>
+                        <div className="flex justify-center items-center">
+                            <p className="text-3xl font-bold">Good Job!</p>
+                        </div>
+                        <div>
+                            <p className="text-2xl max-w-sm justify-center items-center text-center">
+                                You've completed {Math.floor(timerLengths/60)} minutes of focus today.
+                            </p>
+                        </div>
+                        <div>
+                            <button onClick={Continue} className="text-white w-full bg-purple p-2 rounded-xl text-xl">Next Session!</button>
+                        </div>
+                        <div>
+                            <button onClick={notContinue} className="text-white w-full bg-red p-2 rounded-xl text-xl">Abandon Streak :(</button>
                         </div>
                     </div>
                 </div>
