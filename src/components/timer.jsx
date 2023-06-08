@@ -1,13 +1,17 @@
 import React , {useEffect , useState} from "react";
 import axios from "axios";
+import {GrPowerReset} from "react-icons/gr";
+import {IoPlayOutline , IoPauseOutline , IoSettingsOutline} from "react-icons/io5";
+import {BiParty} from "react-icons/bi";
+import {BsFullscreen} from "react-icons/bs";
 
 const Timer = () => {
     const [isRunning , setIsRunning] = useState(false);
     const [pomores , setPomores] = useState(false);
-    const [timerLengths , setTimerLengths] = useState(25*60);
+    const [timerLengths , setTimerLengths] = useState(15);
     const [currentTimer , setCurrentTimer] = useState(timerLengths);
     const [prevTimer, setPrevTimer] = useState(0);
-    const [nextTimer, setNextTimer] = useState(5*60);
+    const [nextTimer, setNextTimer] = useState(10);
     const [showReset , setShowReset] = useState(false);
     const [currentSessionNumber, setCurrentSessionNumber] = useState(1);
     const [prevSessionNumber, setPrevSessionNumber] = useState(1);
@@ -31,7 +35,7 @@ const Timer = () => {
     function resetTimer() {
         setCurrentTimer(timerLengths);
         setIsRunning(false);
-        setShowReset(false)
+        setShowReset(false);
     }
 
     function inc(){
@@ -136,17 +140,10 @@ const Timer = () => {
         }
 
     }
-
     useEffect(() => {
-        const onLoad = () => {
-            quoteAPI();
-        };
-        window.addEventListener('load', onLoad);
+        quoteAPI();
+    },[])
 
-        return () => {
-            window.removeEventListener('load', onLoad);
-        };
-    }, []);
 
     function toggleSettings(){
         setShowSettings(!showSettings);
@@ -158,59 +155,121 @@ const Timer = () => {
 
     return(
         <>
-            <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden" : "block"}>
-                {pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}
-                {nextTimer !== 10 ? <span>Session {prevSessionNumber}</span> : <span>Rest {prevRestNumber}</span>}
+            {/*<div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden" : "block"}>*/}
+            {/*    {pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}*/}
+            {/*    {nextTimer !== 10 ? <span>Session {prevSessionNumber}</span> : <span>Rest {prevRestNumber}</span>}*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}*/}
+            {/*    {nextTimer === 10 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    {pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}*/}
+            {/*    {nextTimer !== 10 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    <button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ? 'Stop' : 'Start'}</button>*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    <button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}>Reset</button>*/}
+            {/*</div>*/}
+            {/*<div className={showPermission ? "block" : "hidden"}>*/}
+            {/*    <button onClick={Continue}>*/}
+            {/*        Yes*/}
+            {/*    </button>*/}
+            {/*    <button onClick={notContinue}>*/}
+            {/*        No*/}
+            {/*    </button>*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    <button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}>Settings</button>*/}
+            {/*</div>*/}
+            {/*<div className={showSettings ? "block" : "hidden"}>*/}
+            {/*    <div>*/}
+            {/*        <button onClick={inc}>+</button>*/}
+            {/*    </div>*/}
+            {/*    <div>*/}
+            {/*        <button onClick={dec}>-</button>*/}
+            {/*    </div>*/}
+            {/*    <div>*/}
+            {/*        <button onClick={toggleSettings}>X</button>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+
+            {/*<div>*/}
+            {/*    <button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}>Focus Mode</button>*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    <button onClick={toggleFocusMode} className={focusMode ? "block" : "hidden"}>X</button>*/}
+            {/*</div>*/}
+
+
+            {/*<div className={!focusMode ? "block" : "hidden"}>*/}
+            {/*    <span>{quote}</span>*/}
+            {/*    <span> - {author}</span>*/}
+            {/*</div>*/}
+            <div className="flex md:hidden justify-center items-center mt-5 bg-white">
+                <ul className="flex md:hidden space-x-4 justify-evenly">
+                    <li><button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ? <IoPauseOutline size={50}/> : <IoPlayOutline size={50}/>}</button></li>
+                    <li><button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}><GrPowerReset size={40}/></button></li>
+                    <li><button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}><IoSettingsOutline size={45}/></button></li>
+                    <li><button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}><BsFullscreen size={40}/></button></li>
+                </ul>
             </div>
-            <div>
-                {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
-                {nextTimer === 10 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
-            </div>
-            <div>
-                {pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}
-                {nextTimer !== 10 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
-            </div>
-            <div>
-                <button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ? 'Stop' : 'Start'}</button>
-            </div>
-            <div>
-                <button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}>Reset</button>
-            </div>
-            <div className={showPermission ? "block" : "hidden"}>
-                <button onClick={Continue}>
-                    Yes
-                </button>
-                <button onClick={notContinue}>
-                    No
-                </button>
-            </div>
-            <div>
-                <button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}>Settings</button>
-            </div>
-            <div className={showSettings ? "block" : "hidden"}>
+
+            <div className="md:flex md:flex-col-3 text-black md:space-x-24 md:mt-10 mx-11 mt-10 space-y-16">
                 <div>
-                    <button onClick={inc}>+</button>
+                    <div className={showPermission ? "absolute flex justify-center items-center w-full  z-[99999]" : "hidden"}>
+                            <div className="flex-row-3 justify-center space-y-5 border-gray-400 border shadow-2xl p-5 bg-white rounded-xl">
+                                <div className="items-center justify-center flex">
+                                    <BiParty size={45}/>
+                                </div>
+                                <div className="flex-row-2 justify-center items-center w-full space-y-3">
+                                    <div className="flex justify-center items-center"><span className="text-4xl font-bold">Good Job</span></div>
+                                    <div className="max-w-sm"> <span className="text-3xl">You've completed {Math.floor((prevSessionNumber*timerLengths)/3600)} hours of focus time today.</span></div>
+                                </div>
+                                <div className="flex-row-2 justify-center items-center w-full space-y-3">
+                                    <div>
+                                        <button onClick={Continue} className="bg-purple text-black p-3 rounded-xl w-full">
+                                            Next Session!
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button onClick={notContinue} className="bg-red text-black p-3 rounded-xl w-full">
+                                            Abandon streak
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden" : "h-[300px] w-[300px] md:h-[400px] md:w-[400px] border-2 rounded-full items-center flex justify-center"}>
+                        {pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}
+                        {nextTimer !== 10 ? <span>Session {prevSessionNumber}</span> : <span>Rest {prevRestNumber}</span>}
+                    </div>
                 </div>
-                <div>
-                    <button onClick={dec}>-</button>
+                <div className="h-[300px] w-[300px] md:h-[400px] md:w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
+                    <div>
+                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
+                        {nextTimer === 10 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                    </div>
                 </div>
-                <div>
-                    <button onClick={toggleSettings}>X</button>
+                <div className="h-[300px] w-[300px] md:h-[400px] md:w-[400px] border-2 rounded-full items-center flex justify-center">
+                    <div>
+                        {pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}
+                        {nextTimer !== 10 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}>Focus Mode</button>
-            </div>
-            <div>
-                <button onClick={toggleFocusMode} className={focusMode ? "block" : "hidden"}>X</button>
+            <div className="hidden md:flex justify-center items-center mt-5 bg-white">
+                <ul className="flex space-x-4 justify-evenly">
+                    <li><button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ? <IoPauseOutline size={50}/> : <IoPlayOutline size={50}/>}</button></li>
+                    <li><button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}><GrPowerReset size={40}/></button></li>
+                    <li><button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}><IoSettingsOutline size={45}/></button></li>
+                    <li><button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}><BsFullscreen size={40}/></button></li>
+                </ul>
             </div>
 
-
-            <div className={!focusMode ? "block" : "hidden"}>
-                <span>{quote}</span>
-                <span> - {author}</span>
-            </div>
 
         </>
 
