@@ -4,8 +4,9 @@ import {GrPowerReset} from "react-icons/gr";
 import {IoPlayOutline , IoPauseOutline , IoSettingsOutline} from "react-icons/io5";
 import {BiParty} from "react-icons/bi";
 import {BsFullscreen} from "react-icons/bs";
-import Navbar from "./navbar";
-import {Link} from "react-router-dom";
+import {AiOutlineClose} from "react-icons/ai";
+import {TbTriangleFilled , TbTriangleInvertedFilled} from "react-icons/tb";
+import Switcher from "../Switcher";
 
 const Timer = () => {
     const [isRunning , setIsRunning] = useState(false);
@@ -155,16 +156,6 @@ const Timer = () => {
         setFocusMode(!focusMode);
     }
 
-    const [button,setButton] = useState(true);
-
-    function toggleButton() {
-        if(window.location.pathname === "/"){
-            setButton(true);
-        }
-        else if(window.location.pathname === "/tasks"){
-            setButton(false);
-        }
-    }
 
     return(
         <>
@@ -248,7 +239,7 @@ const Timer = () => {
                </div>
 
 
-                <div className="justify-center items-center flex md:hidden mx-12">
+                <div className="justify-center items-center flex md:hidden mx-12 z-10">
                     <div className="w-screen justify-between items-center grid grid-rows-3">
                         <div className="fixed top-[25%] ">
                             <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
@@ -273,8 +264,47 @@ const Timer = () => {
                         <li><button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}><BsFullscreen size={32} className="pt-1 ml-4"/></button></li>
                     </ul>
                 </div>
-
             </div>
+            <div className={focusMode ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
+                <div className="fixed top-[30%] left-[36%] hidden md:flex">
+                    <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
+                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
+                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                    </div>
+                </div>
+                <div>
+                    <button onClick={toggleFocusMode} className={focusMode ? "block top-0 right-0 m-5" : "hidden"}><AiOutlineClose size={50}/></button>
+                </div>
+                <div className="fixed left-[12%] top-[23%] flex md:hidden">
+                    <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
+                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
+                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                    </div>
+                </div>
+            </div>
+            <div className={showSettings ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
+                <div className="fixed top-[30%] left-[36%] hidden md:flex">
+                    <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
+                        <button onClick={inc}><TbTriangleFilled /></button>
+                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
+                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                        <button onClick={dec}><TbTriangleInvertedFilled /></button>
+                    </div>
+                </div>
+                <div>
+                    <button onClick={toggleSettings} className={showSettings ? "block top-0 right-0 m-5 float-left" : "hidden"}><AiOutlineClose size={50}/></button>
+                    <div className={showSettings ? "m-5 float-right" : "hidden"}><Switcher /></div>
+                </div>
+                <div className="fixed left-[12%] top-[23%] flex md:hidden">
+                    <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
+                        <button onClick={inc}><TbTriangleFilled /></button>
+                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
+                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                        <button onClick={dec}><TbTriangleInvertedFilled /></button>
+                    </div>
+                </div>
+            </div>
+
 
 
 
