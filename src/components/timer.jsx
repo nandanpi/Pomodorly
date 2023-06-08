@@ -174,8 +174,7 @@ const Timer = () => {
             </div>
             <div>
                 <span>{quote}</span>
-                <span>-</span>
-                <span>{author}</span>
+                <span> - {author}</span>
             </div>
 
         </>
