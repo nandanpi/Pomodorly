@@ -2,14 +2,11 @@ import React , {useEffect , useState} from "react";
 import axios from "axios";
 import {GrPowerReset} from "react-icons/gr";
 import {IoPlayOutline , IoPauseOutline , IoSettingsOutline} from "react-icons/io5";
-import {BiParty} from "react-icons/bi";
 import {BsFullscreen} from "react-icons/bs";
 import {AiOutlineClose} from "react-icons/ai";
 import {TbTriangleFilled , TbTriangleInvertedFilled} from "react-icons/tb";
 import Switcher from "../Switcher";
 import Emoji from "../assets/Emoji.png";
-import {Link} from "react-router-dom";
-
 const Timer = () => {
     const [isRunning , setIsRunning] = useState(false);
     const [pomores , setPomores] = useState(false);
@@ -25,11 +22,10 @@ const Timer = () => {
     const [prevRestNumber, setPrevRestNumber] = useState(1);
     const [nextRestNumber, setNextRestNumber] = useState(1);
     const [showPermission, setShowPermission] = useState(false);
-    const [quote, setQuote] = useState("");
-    const [author, setAuthor] = useState("");
     const [showSettings, setShowSettings] = useState(false);
     const [focusMode, setFocusMode] = useState(false);
-
+    const [quote, setQuote] = useState("");
+    const [author, setAuthor] = useState("");
     let interval = null;
 
 
@@ -129,10 +125,20 @@ const Timer = () => {
         setNextRestNumber(1);
     }
 
+    function toggleSettings(){
+        setShowSettings(!showSettings);
+        if(isRunning)
+            setIsRunning(!isRunning);
+    }
+
+    function toggleFocusMode(){
+        setFocusMode(!focusMode);
+    }
+
     const quoteAPI = async () =>{
         let arrayOfQuotes = [];
         try{
-            const data = axios.get("https://api.quotable.io/random?tags=motivational");
+            const data = axios.get("https://api.quotable.io/random?tags=motivational&maxLength=100");
             arrayOfQuotes = (await (data)).data;
             console.log(data);
         }catch (error){
@@ -151,78 +157,12 @@ const Timer = () => {
     },[])
 
 
-    function toggleSettings(){
-        setShowSettings(!showSettings);
-        if(isRunning)
-            setIsRunning(!isRunning);
-    }
-
-    function toggleFocusMode(){
-        setFocusMode(!focusMode);
-    }
-
-
     return(
         <>
-            {/*<div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden" : "block"}>*/}
-            {/*    {pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}*/}
-            {/*    {nextTimer !== 10 ? <span>Session {prevSessionNumber}</span> : <span>Rest {prevRestNumber}</span>}*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}*/}
-            {/*    {nextTimer === 10 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    {pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}*/}
-            {/*    {nextTimer !== 10 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    <button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ? 'Stop' : 'Start'}</button>*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    <button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}>Reset</button>*/}
-            {/*</div>*/}
-            {/*<div className={showPermission ? "block" : "hidden"}>*/}
-            {/*    <button onClick={Continue}>*/}
-            {/*        Yes*/}
-            {/*    </button>*/}
-            {/*    <button onClick={notContinue}>*/}
-            {/*        No*/}
-            {/*    </button>*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    <button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}>Settings</button>*/}
-            {/*</div>*/}
-            {/*<div className={showSettings ? "block" : "hidden"}>*/}
-            {/*    <div>*/}
-            {/*        <button onClick={inc}>+</button>*/}
-            {/*    </div>*/}
-            {/*    <div>*/}
-            {/*        <button onClick={dec}>-</button>*/}
-            {/*    </div>*/}
-            {/*    <div>*/}
-            {/*        <button onClick={toggleSettings}>X</button>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-
-            {/*<div>*/}
-            {/*    <button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}>Focus Mode</button>*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    <button onClick={toggleFocusMode} className={focusMode ? "block" : "hidden"}>X</button>*/}
-            {/*</div>*/}
-
-
-            {/*<div className={!focusMode ? "block" : "hidden"}>*/}
-            {/*    <span>{quote}</span>*/}
-            {/*    <span> - {author}</span>*/}
-            {/*</div>*/}
-
-
             <div>
                <div className="justify-center items-center hidden md:flex">
                    <div className="w-screen justify-between items-center grid grid-cols-3">
-                       <div className="fixed top-[30%] left-[-6%]">
+                       <div className="fixed top-[33%] left-[-6%]">
                            <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden fixed" : "h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center"}>
                                <div className="grid-rows-2 text-center">
                                    <div>
@@ -234,7 +174,7 @@ const Timer = () => {
                                </div>
                            </div>
                        </div>
-                       <div className="fixed top-[30%] left-[36%]">
+                       <div className="fixed top-[33%] left-[36%]">
                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl ">
                                <div className="grid-rows-2 text-center">
                                    <div>
@@ -246,7 +186,7 @@ const Timer = () => {
                                </div>
                            </div>
                        </div>
-                       <div className="fixed top-[30%] left-[80%]">
+                       <div className="fixed top-[33%] left-[80%]">
                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center">
                                <div className="grid-rows-2 text-center">
                                    <div>
@@ -264,7 +204,7 @@ const Timer = () => {
 
                 <div className="justify-center items-center flex md:hidden mx-12 z-10">
                     <div className="w-screen justify-between items-center grid grid-rows-3">
-                        <div className="fixed top-[25%] ">
+                        <div className="fixed top-[30%] ">
                             <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
                                 <div className="grid-rows-2 text-center">
                                     <div>
@@ -291,13 +231,20 @@ const Timer = () => {
                     </div>
                 </div>
 
-                <div className="flex justify-center items-center bg-white dark:bg-black pt-3">
-                    <ul className="flex space-x-4">
-                        <li><button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ?<IoPauseOutline size={40}/> : <IoPlayOutline size={40}/>}</button></li>
-                        <li><button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}><GrPowerReset size={35} className="pt-1 mr-2"/></button></li>
-                        <li><button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}><IoSettingsOutline size={38} /></button></li>
-                        <li><button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}><BsFullscreen size={32} className="pt-1 ml-4"/></button></li>
-                    </ul>
+                <div className="grid-rows-2 justify-center items-center bg-white dark:bg-black pt-3 space-y-1">
+                    <div className="flex justify-center items-center">
+                        <ul className="flex space-x-4">
+                            <li><button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ?<IoPauseOutline size={40}/> : <IoPlayOutline size={40}/>}</button></li>
+                            <li><button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}><GrPowerReset size={35} className="pt-1 mr-2"/></button></li>
+                            <li><button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}><IoSettingsOutline size={38} /></button></li>
+                            <li><button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}><BsFullscreen size={32} className="pt-1 ml-4"/></button></li>
+                        </ul>
+                    </div>
+                    <div className="flex justify-center items-center text-center text-gray-400 space-x-4 text-sm mx-4">
+                        <div>
+                            <p>"{quote}" - {author}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -314,7 +261,7 @@ const Timer = () => {
                 <div>
                     <button onClick={toggleFocusMode} className={focusMode ? "block top-0 right-0 m-5" : "hidden"}><AiOutlineClose size={50}/></button>
                 </div>
-                <div className="fixed left-[12%] top-[23%] flex md:hidden">
+                <div className="fixed left-[12%] top-[28%] flex md:hidden">
                     <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
                         <div className="grid-rows-2 text-center">
                             <div className="bg-black p-3 rounded-2xl">
