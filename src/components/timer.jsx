@@ -118,7 +118,7 @@ const Timer = () => {
     function notContinue(){
         console.log("Not Continue");
         setShowPermission(false);
-        setCurrentTimer(timerLengths);
+        setCurrentTimer(25*60);
         setIsRunning(false);
         setShowReset(false);
         setCurrentSessionNumber(1);
@@ -153,6 +153,8 @@ const Timer = () => {
 
     function toggleSettings(){
         setShowSettings(!showSettings);
+        if(isRunning)
+            setIsRunning(!isRunning);
     }
 
     function toggleFocusMode(){
@@ -220,22 +222,40 @@ const Timer = () => {
             <div>
                <div className="justify-center items-center hidden md:flex">
                    <div className="w-screen justify-between items-center grid grid-cols-3">
-                       <div className="fixed top-[30%] left-[-5%]">
+                       <div className="fixed top-[30%] left-[-6%]">
                            <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden fixed" : "h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center"}>
-                               {pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}
-                               {nextTimer !== 5 ? <span>Session {prevSessionNumber}</span> : <span>Rest {prevRestNumber}</span>}
+                               <div className="grid-rows-2 text-center">
+                                   <div>
+                                       <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}</span>
+                                   </div>
+                                   <div className="text-3xl text-gray-400">
+                                       {nextTimer !== 5 ? <span>Session {prevSessionNumber}</span> : <span>Rest {prevRestNumber}</span>}
+                                   </div>
+                               </div>
                            </div>
                        </div>
                        <div className="fixed top-[30%] left-[36%]">
-                           <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
-                               {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
-                               {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                           <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl ">
+                               <div className="grid-rows-2 text-center">
+                                   <div>
+                                       <span className="text-6xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
+                                   </div>
+                                   <div className="text-3xl">
+                                       {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                                   </div>
+                               </div>
                            </div>
                        </div>
                        <div className="fixed top-[30%] left-[80%]">
                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center">
-                               {pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}
-                               {nextTimer !== 5 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
+                               <div className="grid-rows-2 text-center">
+                                   <div>
+                                       <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
+                                   </div>
+                                   <div className="text-3xl text-gray-400">
+                                       {nextTimer !== 5 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
+                                   </div>
+                               </div>
                            </div>
                        </div>
                    </div>
@@ -246,14 +266,26 @@ const Timer = () => {
                     <div className="w-screen justify-between items-center grid grid-rows-3">
                         <div className="fixed top-[25%] ">
                             <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
-                                {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
-                                {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                                <div className="grid-rows-2 text-center">
+                                    <div>
+                                        <span className="text-4xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
+                                    </div>
+                                    <div className="text-2xl">
+                                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="fixed top-[75%]">
                             <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center ">
-                                {pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}
-                                {nextTimer !== 5 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
+                                <div className="grid-rows-2 text-center">
+                                    <div>
+                                        <span className="text-4xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
+                                    </div>
+                                    <div className="text-2xl text-gray-400">
+                                        {nextTimer !== 5 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -272,8 +304,11 @@ const Timer = () => {
             <div className={focusMode ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
                 <div className="fixed top-[30%] left-[36%] hidden md:flex">
                     <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
-                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
-                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                        <div className="grid-rows-2 text-center">
+                            <div className="bg-black p-3 rounded-2xl">
+                                <span className="text-7xl font-bold text-white">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -281,8 +316,11 @@ const Timer = () => {
                 </div>
                 <div className="fixed left-[12%] top-[23%] flex md:hidden">
                     <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
-                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
-                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                        <div className="grid-rows-2 text-center">
+                            <div className="bg-black p-3 rounded-2xl">
+                                <span className="text-5xl font-bold text-white">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -318,7 +356,7 @@ const Timer = () => {
                         <div className="items-center justify-center flex">
                             <TbTriangleInvertedFilled onClick={dec}/>
                         </div>
-                        <div onClick={notContinue} className="items-center justify-center flex">
+                        <div onClick={notContinue} className="items-center justify-center flex cursor-pointer text-red font-bold">
                             Reset all the Sessions
                         </div>
                     </div>
