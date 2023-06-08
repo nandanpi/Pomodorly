@@ -1,4 +1,5 @@
 import React , {useEffect , useState} from "react";
+import axios from "axios";
 
 const Timer = () => {
     const [isRunning , setIsRunning] = useState(false);
@@ -15,9 +16,12 @@ const Timer = () => {
     const [prevRestNumber, setPrevRestNumber] = useState(1);
     const [nextRestNumber, setNextRestNumber] = useState(1);
     const [showPermission, setShowPermission] = useState(false);
+    const [quote, setQuote] = useState("");
+    const [author, setAuthor] = useState("");
     let interval = null;
     function toggleTimer() {
         setIsRunning(!isRunning);
+        quoteAPI();
     }
 
     function resetTimer() {
@@ -103,6 +107,37 @@ const Timer = () => {
         setNextSessionNumber(1);
         setNextRestNumber(1);
     }
+
+    const quoteAPI = async () =>{
+        let arrayOfQuotes = [];
+        try{
+            const data = axios.get("https://api.quotable.io/random?tags=motivational");
+            arrayOfQuotes = (await (data)).data;
+            console.log(data);
+        }catch (error){
+            console.log(error);
+        }
+        try{
+            setQuote(arrayOfQuotes.content);
+            setAuthor(arrayOfQuotes.author);
+        }catch (error){
+            console.log(error);
+        }
+
+    }
+    // useEffect(() => {
+    //     quoteAPI();
+    // },[])
+    useEffect(() => {
+        const onLoad = () => {
+            quoteAPI();
+        };
+        window.addEventListener('load', onLoad);
+
+        return () => {
+            window.removeEventListener('load', onLoad);
+        };
+    }, []);
     return(
         <>
             <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden" : "block"}>
@@ -136,6 +171,11 @@ const Timer = () => {
                 <button onClick={notContinue}>
                     No
                 </button>
+            </div>
+            <div>
+                <span>{quote}</span>
+                <span>-</span>
+                <span>{author}</span>
             </div>
 
         </>
