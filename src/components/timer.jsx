@@ -7,6 +7,7 @@ import {BsFullscreen} from "react-icons/bs";
 import {AiOutlineClose} from "react-icons/ai";
 import {TbTriangleFilled , TbTriangleInvertedFilled} from "react-icons/tb";
 import Switcher from "../Switcher";
+import {Link} from "react-router-dom";
 
 const Timer = () => {
     const [isRunning , setIsRunning] = useState(false);
@@ -27,6 +28,7 @@ const Timer = () => {
     const [author, setAuthor] = useState("");
     const [showSettings, setShowSettings] = useState(false);
     const [focusMode, setFocusMode] = useState(false);
+
     let interval = null;
 
 
@@ -48,7 +50,7 @@ const Timer = () => {
                 setCurrentTimer(currentTimer+60);
             }
             else
-                setCurrentTimer(currentTimer+60);
+                setTimerLengths(currentTimer+60);
         }
     }
 
@@ -265,6 +267,7 @@ const Timer = () => {
                     </ul>
                 </div>
             </div>
+
             <div className={focusMode ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
                 <div className="fixed top-[30%] left-[36%] hidden md:flex">
                     <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
@@ -283,24 +286,39 @@ const Timer = () => {
                 </div>
             </div>
             <div className={showSettings ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
-                <div className="fixed top-[30%] left-[36%] hidden md:flex">
-                    <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
-                        <button onClick={inc}><TbTriangleFilled /></button>
-                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
-                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
-                        <button onClick={dec}><TbTriangleInvertedFilled /></button>
-                    </div>
-                </div>
-                <div>
-                    <button onClick={toggleSettings} className={showSettings ? "block top-0 right-0 m-5 float-left" : "hidden"}><AiOutlineClose size={50}/></button>
-                    <div className={showSettings ? "m-5 float-right" : "hidden"}><Switcher /></div>
-                </div>
-                <div className="fixed left-[12%] top-[23%] flex md:hidden">
-                    <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
-                        <button onClick={inc}><TbTriangleFilled /></button>
-                        {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
-                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
-                        <button onClick={dec}><TbTriangleInvertedFilled /></button>
+                <div className="flex justify-center items-center h-screen">
+                    <div className="bg-white shadow-2xl rounded-xl grid space-y-5 p-5">
+                        <div>
+                            <div className="float-left">
+                                <AiOutlineClose onClick={toggleSettings} size={40} className="cursor-pointer"/>
+                            </div>
+                            <div className="float-right">
+                                <Switcher />
+                            </div>
+                        </div>
+                        <div>
+                            <p className="text-xl font-bold">
+                                Change Timer Length:
+                            </p>
+                        </div>
+                        <div>
+                            <ul className="flex space-x-3 bg-blue-200 p-2 rounded-full">
+                                <li  className="bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg">Session</li>
+                                <li  className="bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg">Rest</li>
+                            </ul>
+                        </div>
+                        <div className="items-center justify-center flex">
+                            <TbTriangleFilled onClick={inc}/>
+                        </div>
+                        <div className="items-center justify-center flex">
+                                    {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
+                        </div>
+                        <div className="items-center justify-center flex">
+                            <TbTriangleInvertedFilled onClick={dec}/>
+                        </div>
+                        <div onClick={notContinue} className="items-center justify-center flex">
+                            Reset all the Sessions
+                        </div>
                     </div>
                 </div>
             </div>
