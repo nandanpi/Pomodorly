@@ -7,15 +7,19 @@ import {AiOutlineClose} from "react-icons/ai";
 import {TbTriangleFilled , TbTriangleInvertedFilled} from "react-icons/tb";
 import Switcher from "../Switcher";
 import Emoji from "../assets/Emoji.png";
+
+
 const Timer = () => {
     const [isRunning , setIsRunning] = useState(false);
     const [pomores , setPomores] = useState(false);
-    const [timerLengths , setTimerLengths] = useState(10);
-    const [currentTimer , setCurrentTimer] = useState(timerLengths);
+    // const [timerLengths , setTimerLengths] = useState(0);
+    const [sessionTimerLength, setSessionTimerLength] = useState(10);
+    const [restTimerLength, setRestTimerLength] = useState(5)
+    const [currentTimer , setCurrentTimer] = useState(0);
     const [prevTimer, setPrevTimer] = useState(0);
-    const [nextTimer, setNextTimer] = useState(5);
+    const [nextTimer, setNextTimer] = useState(0);
     const [showReset , setShowReset] = useState(false);
-    const [currentSessionNumber, setCurrentSessionNumber] = useState(1);
+    const [currentSessionNumber, setCurrentSessionNumber] = useState(0);
     const [prevSessionNumber, setPrevSessionNumber] = useState(1);
     const [nextSessionNumber, setNextSessionNumber] = useState(1);
     const [currentRestNumber, setCurrentRestNumber] = useState(1);
@@ -26,39 +30,34 @@ const Timer = () => {
     const [focusMode, setFocusMode] = useState(false);
     const [quote, setQuote] = useState("");
     const [author, setAuthor] = useState("");
+    const [button, setButton] = useState(false);
     let interval = null;
-
 
     function toggleTimer() {
         setIsRunning(!isRunning);
-        quoteAPI();
     }
 
     function resetTimer() {
-        setCurrentTimer(timerLengths);
+        setCurrentTimer(nextTimer === sessionTimerLength ? restTimerLength : sessionTimerLength);
         setIsRunning(false);
         setShowReset(false);
     }
 
     function inc(){
         if(currentTimer !== 0){
-            if(!isRunning){
-                setTimerLengths(currentTimer + 60);
-                setCurrentTimer(currentTimer+60);
-            }
+            if(button)
+                setRestTimerLength(restTimerLength + 60);
             else
-                setTimerLengths(currentTimer+60);
+                setSessionTimerLength(sessionTimerLength + 60);
         }
     }
 
     function dec(){
-        if(!(currentTimer<=60)){
-            if(!isRunning){
-                setTimerLengths(currentTimer - 60);
-                setCurrentTimer(currentTimer - 60);
-            }
-            else
-                setCurrentTimer(currentTimer-60);
+        if(button){
+            setRestTimerLength(restTimerLength - 60);
+        }
+        else{
+            setSessionTimerLength(sessionTimerLength - 60);
         }
     }
 
@@ -75,51 +74,49 @@ const Timer = () => {
         } else if (!isRunning && currentTimer !== 0) {
             clearInterval(interval);
         }
-        if(currentTimer < timerLengths)
+        if(currentTimer < (sessionTimerLength || restTimerLength))
             setShowReset(true);
         if(currentTimer === 0){
             setPomores(!pomores);
             setPrevTimer(currentTimer);
             setCurrentTimer(nextTimer);
-            setNextTimer(nextTimer === 5 ? 10 : 5);
-            if (nextTimer === 5) {
-                setCurrentSessionNumber((prevNumber) => prevNumber + 1);
-            } else {
-                setCurrentRestNumber((prevNumber) => prevNumber + 1);
+            setNextTimer(nextTimer === restTimerLength ? sessionTimerLength : restTimerLength);
+            if(nextTimer === sessionTimerLength){
+                setCurrentRestNumber((prevNumber) => prevNumber +1 );
+                setNextRestNumber(currentRestNumber + 1);
+                setShowPermission(true);
+            }
+            else{
+                setCurrentSessionNumber((prevNumber) => prevNumber +1);
+                setNextSessionNumber(currentSessionNumber + 1 );
             }
             setPrevSessionNumber(currentSessionNumber);
-            setCurrentSessionNumber(nextSessionNumber);
-            setNextSessionNumber(currentSessionNumber + 1);
             setPrevRestNumber(currentRestNumber);
-            setCurrentRestNumber(nextRestNumber);
-            setNextRestNumber(currentRestNumber + 1);
+
         }
         return () => clearInterval(interval);
-    }, [isRunning, pomores, currentTimer, timerLengths, nextTimer, currentSessionNumber, nextSessionNumber, currentRestNumber, nextRestNumber, prevSessionNumber, prevRestNumber]);
+    }, [isRunning, pomores, currentTimer, sessionTimerLength, restTimerLength, nextTimer, currentSessionNumber, nextSessionNumber, currentRestNumber, nextRestNumber, prevSessionNumber, prevRestNumber]);
 
     useEffect(() => {
         if(currentRestNumber !== 1){
-            setShowPermission(true);
             clearInterval(interval);
             setFocusMode(false);
         }
     },[currentRestNumber, interval])
 
     function Continue(){
-        console.log("Continue");
         setShowPermission(false);
         setIsRunning(!isRunning);
     }
 
     function notContinue(){
-        console.log("Not Continue");
         setShowPermission(false);
-        setCurrentTimer(25*60);
+        setCurrentTimer(10);
         setIsRunning(false);
         setShowReset(false);
         setCurrentSessionNumber(1);
         setCurrentRestNumber(1);
-        setPrevSessionNumber(1);
+        setPrevSessionNumber(0);
         setPrevRestNumber(1);
         setNextSessionNumber(1);
         setNextRestNumber(1);
@@ -154,52 +151,65 @@ const Timer = () => {
     }
     useEffect(() => {
         quoteAPI();
-    },[])
+        setCurrentTimer(sessionTimerLength);
+        setNextTimer(restTimerLength);
+    },[restTimerLength, sessionTimerLength])
 
+    function changeToSession(){
+      setButton(false);
+    }
+
+    function changeToRest(){
+        setButton(true);
+    }
+
+    function resetTodefault(){
+        window.location.reload();
+    }
 
     return(
         <>
             <div>
-               <div className="justify-center items-center hidden md:flex">
-                   <div className="w-screen justify-between items-center grid grid-cols-3">
-                       <div className="fixed top-[33%] left-[-6%]">
-                           <div className={currentSessionNumber && nextSessionNumber === 1 ? "hidden fixed" : "h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center"}>
-                               <div className="grid-rows-2 text-center">
-                                   <div>
-                                       <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}</span>
-                                   </div>
-                                   <div className="text-3xl text-gray-400">
-                                       {nextTimer !== 5 ? <span>Session {prevSessionNumber}</span> : <span>Rest {prevRestNumber}</span>}
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                       <div className="fixed top-[33%] left-[36%]">
-                           <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl ">
-                               <div className="grid-rows-2 text-center">
-                                   <div>
-                                       <span className="text-6xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
-                                   </div>
-                                   <div className="text-3xl">
-                                       {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                       <div className="fixed top-[33%] left-[80%]">
-                           <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center">
-                               <div className="grid-rows-2 text-center">
-                                   <div>
-                                       <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
-                                   </div>
-                                   <div className="text-3xl text-gray-400">
-                                       {nextTimer !== 5 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
+                <div className="justify-center items-center hidden md:flex">
+                    <div className="w-screen justify-between items-center grid grid-cols-3">
+                        <div className="fixed top-[33%] left-[-6%]">
+                            <div className={prevRestNumber ===1 && prevSessionNumber === 0 ? "hidden" : "h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center"}>
+                                <div className="grid-rows-2 text-center">
+                                    <div>
+                                        <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}</span>
+                                    </div>
+                                    <div className="text-3xl text-gray-400">
+                                        {nextTimer === restTimerLength ? <span>Rest {prevRestNumber}</span> : <span>Session {prevSessionNumber}</span>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="fixed top-[33%] left-[36%]">
+                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl ">
+                                <div className="grid-rows-2 text-center">
+                                    <div>
+                                        <span className="text-6xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
+                                    </div>
+                                    <div className="text-3xl">
+                                        {nextTimer === restTimerLength ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="fixed top-[33%] left-[80%]">
+                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center">
+                                <div className="grid-rows-2 text-center">
+                                    <div>
+                                        <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
+                                    </div>
+                                    <div className="text-3xl text-gray-400">
+                                        {nextTimer === restTimerLength ? <span>Rest {nextRestNumber}</span> : <span>Session {nextSessionNumber}</span>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
                 <div className="justify-center items-center flex md:hidden mx-12 z-10">
@@ -211,7 +221,7 @@ const Timer = () => {
                                         <span className="text-4xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
                                     </div>
                                     <div className="text-2xl">
-                                        {nextTimer === 5 ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
+                                        {nextTimer === restTimerLength ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
                                     </div>
                                 </div>
                             </div>
@@ -223,7 +233,7 @@ const Timer = () => {
                                         <span className="text-4xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
                                     </div>
                                     <div className="text-2xl text-gray-400">
-                                        {nextTimer !== 5 ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
+                                        {nextTimer !== restTimerLength ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
                                     </div>
                                 </div>
                             </div>
@@ -289,21 +299,24 @@ const Timer = () => {
                             </p>
                         </div>
                         <div>
-                            <ul className="flex space-x-3 bg-blue-200 p-2 rounded-full">
-                                <li  className="bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg">Session</li>
-                                <li  className="bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg">Rest</li>
+                            <ul className="space-x-3  p-2 rounded-full flex justify-center items-center">
+                                <li onClick={changeToSession} className={!button ? "bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg cursor-pointer" : "p-2 text-sm md:text-lg cursor-pointer"}>Session</li>
+                                <li onClick={changeToRest} className={button ? "bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg cursor-pointer" : "p-2 text-sm md:text-lg cursor-pointer"}>Rest</li>
                             </ul>
                         </div>
                         <div className="items-center justify-center flex">
                             <TbTriangleFilled onClick={inc}/>
                         </div>
-                        <div className="items-center justify-center flex">
-                                    {pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}
+                        <div className={!button ? "items-center justify-center flex" : "hidden"}>
+                            {pad(Math.floor(sessionTimerLength/60))}:{pad(sessionTimerLength%60)}
+                        </div>
+                        <div className={button ? "items-center justify-center flex" : "hidden"}>
+                            {pad(Math.floor(restTimerLength/60))}:{pad(restTimerLength%60)}
                         </div>
                         <div className="items-center justify-center flex">
                             <TbTriangleInvertedFilled onClick={dec}/>
                         </div>
-                        <div onClick={notContinue} className="items-center justify-center flex cursor-pointer text-red font-bold">
+                        <div onClick={resetTodefault} className="items-center justify-center flex cursor-pointer text-red font-bold">
                             Reset all the Sessions
                         </div>
                     </div>
@@ -321,7 +334,7 @@ const Timer = () => {
                         </div>
                         <div>
                             <p className="text-2xl max-w-sm justify-center items-center text-center">
-                                You've completed {Math.floor(timerLengths/60)} minutes of focus today.
+                                You've completed {Math.floor(sessionTimerLength/60)} minutes of focus today.
                             </p>
                         </div>
                         <div>
@@ -333,9 +346,6 @@ const Timer = () => {
                     </div>
                 </div>
             </div>
-
-
-
 
 
         </>
