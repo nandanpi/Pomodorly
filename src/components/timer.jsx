@@ -44,19 +44,41 @@ const Timer = () => {
 
     function inc(){
         if(currentTimer !== 0){
-            if(button)
+            if(button){
                 setRestTimerLength(restTimerLength + 60);
-            else
+                if(nextTimer === restTimerLength)
+                    setNextTimer(nextTimer + 60);
+                else{
+                    setCurrentTimer(currentTimer + 60);
+                }
+            }
+            else{
                 setSessionTimerLength(sessionTimerLength + 60);
+                if(nextTimer === restTimerLength)
+                    setNextTimer(nextTimer + 60);
+                else{
+                    setCurrentTimer(currentTimer + 60);
+                }
+            }
         }
     }
 
     function dec(){
         if(button){
             setRestTimerLength(restTimerLength - 60);
+            if(nextTimer === restTimerLength)
+                setNextTimer(nextTimer - 60);
+            else{
+                setCurrentTimer(currentTimer - 60);
+            }
         }
         else{
             setSessionTimerLength(sessionTimerLength - 60);
+            if(nextTimer === restTimerLength)
+                setNextTimer(nextTimer - 60);
+            else{
+                setCurrentTimer(currentTimer - 60);
+            }
         }
     }
 
