@@ -65,19 +65,23 @@ const Timer = () => {
 
     function dec(){
         if(button){
-            setRestTimerLength(restTimerLength - 60);
-            if(nextTimer === restTimerLength)
-                setNextTimer(nextTimer - 60);
-            else{
-                setCurrentTimer(currentTimer - 60);
+            if(!(restTimerLength <=60)){
+                setRestTimerLength(restTimerLength - 60);
+                if(nextTimer === restTimerLength)
+                    setNextTimer(nextTimer - 60);
+                else{
+                    setCurrentTimer(currentTimer - 60);
+                }
             }
         }
         else{
-            setSessionTimerLength(sessionTimerLength - 60);
-            if(nextTimer === restTimerLength)
-                setNextTimer(nextTimer - 60);
-            else{
-                setCurrentTimer(currentTimer - 60);
+            if(!(sessionTimerLength <= 60)){
+                setSessionTimerLength(sessionTimerLength - 60);
+                if(nextTimer === restTimerLength)
+                    setNextTimer(nextTimer - 60);
+                else{
+                    setCurrentTimer(currentTimer - 60);
+                }
             }
         }
     }
