@@ -12,8 +12,8 @@ const Timer = () => {
     const [isRunning , setIsRunning] = useState(false);
     const [pomores , setPomores] = useState(false);
     // const [timerLengths , setTimerLengths] = useState(0);
-    const [sessionTimerLength, setSessionTimerLength] = useState(10);
-    const [restTimerLength, setRestTimerLength] = useState(5)
+    const [sessionTimerLength, setSessionTimerLength] = useState(25*60);
+    const [restTimerLength, setRestTimerLength] = useState(5*60)
     const [currentTimer , setCurrentTimer] = useState(0);
     const [prevTimer, setPrevTimer] = useState(0);
     const [nextTimer, setNextTimer] = useState(0);
