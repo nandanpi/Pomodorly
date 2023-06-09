@@ -1,11 +1,10 @@
 import React , {useEffect , useState} from "react";
 import axios from "axios";
-import {GrPowerReset} from "react-icons/gr";
+import {RxReset} from "react-icons/rx";
 import {IoPlayOutline , IoPauseOutline , IoSettingsOutline} from "react-icons/io5";
 import {BsFullscreen} from "react-icons/bs";
 import {AiOutlineClose} from "react-icons/ai";
 import {TbTriangleFilled , TbTriangleInvertedFilled} from "react-icons/tb";
-import Switcher from "../Switcher";
 import Emoji from "../assets/Emoji.png";
 
 
@@ -66,6 +65,7 @@ const Timer = () => {
     }
 
     useEffect(() => {
+        setShowReset(false);
         if(isRunning){
             // eslint-disable-next-line react-hooks/exhaustive-deps
             interval = setInterval(() => {
@@ -170,10 +170,10 @@ const Timer = () => {
     return(
         <>
             <div>
-                <div className="justify-center items-center hidden md:flex">
-                    <div className="w-screen justify-between items-center grid grid-cols-3">
-                        <div className="fixed top-[33%] left-[-6%]">
-                            <div className={prevRestNumber ===1 && prevSessionNumber === 0 ? "hidden" : "h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center"}>
+                <div className="justify-center items-center hidden md:flex bg-white ">
+                    <div className="w-screen justify-between items-center grid grid-cols-3 bg-white ">
+                        <div className="fixed top-[33%] left-[-6%] bg-white ">
+                            <div className={prevRestNumber ===1 && prevSessionNumber === 0 ? "hidden" : "h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center bg-white "}>
                                 <div className="grid-rows-2 text-center">
                                     <div>
                                         <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(prevTimer/60))}:{pad(prevTimer%60)}</span>
@@ -185,7 +185,7 @@ const Timer = () => {
                             </div>
                         </div>
                         <div className="fixed top-[33%] left-[36%]">
-                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl ">
+                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl bg-white text-black ">
                                 <div className="grid-rows-2 text-center">
                                     <div>
                                         <span className="text-6xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
@@ -197,7 +197,7 @@ const Timer = () => {
                             </div>
                         </div>
                         <div className="fixed top-[33%] left-[80%]">
-                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center">
+                            <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center bg-white ">
                                 <div className="grid-rows-2 text-center">
                                     <div>
                                         <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
@@ -218,9 +218,9 @@ const Timer = () => {
                             <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center shadow-2xl">
                                 <div className="grid-rows-2 text-center">
                                     <div>
-                                        <span className="text-4xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
+                                        <span className="text-6xl font-bold">{pad(Math.floor(currentTimer/60))}:{pad(currentTimer%60)}</span>
                                     </div>
-                                    <div className="text-2xl">
+                                    <div className="text-3xl">
                                         {nextTimer === restTimerLength ? <span>Session {currentSessionNumber}</span> : <span>Rest {currentRestNumber}</span>}
                                     </div>
                                 </div>
@@ -230,10 +230,10 @@ const Timer = () => {
                             <div className="h-[300px] w-[300px] border-2 rounded-full items-center flex justify-center ">
                                 <div className="grid-rows-2 text-center">
                                     <div>
-                                        <span className="text-4xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
+                                        <span className="text-6xl font-bold text-gray-400">{pad(Math.floor(nextTimer/60))}:{pad(nextTimer%60)}</span>
                                     </div>
-                                    <div className="text-2xl text-gray-400">
-                                        {nextTimer !== restTimerLength ? <span>Session {nextSessionNumber}</span> : <span>Rest {nextRestNumber}</span>}
+                                    <div className="text-3xl text-gray-400">
+                                        {nextTimer === restTimerLength ? <span>Rest {nextRestNumber}</span> : <span>Session {nextSessionNumber}</span>}
                                     </div>
                                 </div>
                             </div>
@@ -241,13 +241,13 @@ const Timer = () => {
                     </div>
                 </div>
 
-                <div className="grid-rows-2 justify-center items-center bg-white dark:bg-black pt-3 space-y-1">
+                <div className="grid-rows-2 justify-center items-center bg-white pt-3 space-y-1">
                     <div className="flex justify-center items-center">
                         <ul className="flex space-x-4">
-                            <li><button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ?<IoPauseOutline size={40}/> : <IoPlayOutline size={40}/>}</button></li>
-                            <li><button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}><GrPowerReset size={35} className="pt-1 mr-2"/></button></li>
-                            <li><button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}><IoSettingsOutline size={38} /></button></li>
-                            <li><button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}><BsFullscreen size={32} className="pt-1 ml-4"/></button></li>
+                            <li><button onClick={toggleTimer} className={!focusMode ? "block" : "hidden"}>{isRunning ?<IoPauseOutline size={40} className="text-black "/> : <IoPlayOutline size={40} className="text-black "/>}</button></li>
+                            <li><button onClick={resetTimer} className={showReset && !focusMode ? 'block' : 'hidden'}><RxReset size={35} className="pt-1 mr-2 text-black "/></button></li>
+                            <li><button onClick={toggleSettings} className={!focusMode ? "block" : "hidden"}><IoSettingsOutline size={38} className="text-black "/></button></li>
+                            <li><button onClick={toggleFocusMode} className={!focusMode ? "block" : "hidden"}><BsFullscreen size={32} className="pt-1 ml-4 text-black "/></button></li>
                         </ul>
                     </div>
                     <div className="flex justify-center items-center text-center text-gray-400 space-x-4 text-sm mx-4">
@@ -259,7 +259,7 @@ const Timer = () => {
             </div>
 
             <div className={focusMode ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
-                <div className="fixed top-[30%] left-[36%] hidden md:flex">
+                <div className="fixed top-[33%] left-[36%] hidden md:flex">
                     <div className="h-[400px] w-[400px] border-2 rounded-full items-center flex justify-center shadow-2xl">
                         <div className="grid-rows-2 text-center">
                             <div className="bg-black p-3 rounded-2xl">
@@ -284,36 +284,33 @@ const Timer = () => {
 
             <div className={showSettings ? "block absolute h-screen w-screen top-0 right-0 bg-opacity-40 backdrop-blur-sm z-[99999]" : "hidden" }>
                 <div className="flex justify-center items-center h-screen">
-                    <div className="bg-white shadow-2xl rounded-xl grid space-y-5 p-5">
+                    <div className="bg-white shadow-2xl rounded-xl grid space-y-5 p-5  ">
                         <div>
                             <div className="float-left">
-                                <AiOutlineClose onClick={toggleSettings} size={40} className="cursor-pointer"/>
-                            </div>
-                            <div className="float-right">
-                                <Switcher />
+                                <AiOutlineClose onClick={toggleSettings} size={40} className="cursor-pointer text-black "/>
                             </div>
                         </div>
                         <div>
-                            <p className="text-xl font-bold">
+                            <p className="text-xl font-bold text-black ">
                                 Change Timer Length:
                             </p>
                         </div>
                         <div>
                             <ul className="space-x-3  p-2 rounded-full flex justify-center items-center">
-                                <li onClick={changeToSession} className={!button ? "bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg cursor-pointer" : "p-2 text-sm md:text-lg cursor-pointer"}>Session</li>
-                                <li onClick={changeToRest} className={button ? "bg-black text-white rounded-full p-2 font-bold duration-200 text-sm md:text-lg cursor-pointer" : "p-2 text-sm md:text-lg cursor-pointer"}>Rest</li>
+                                <li onClick={changeToSession} className={!button ? "bg-blue-300 text-black rounded-full p-2 font-bold duration-200 text-sm md:text-lg cursor-pointer" : "p-2 text-sm md:text-lg cursor-pointer text-black "}>Session</li>
+                                <li onClick={changeToRest} className={button ? "bg-blue-300 text-black rounded-full p-2 font-bold duration-200 text-sm md:text-lg cursor-pointer" : "p-2 text-sm md:text-lg cursor-pointer text-black "}>Rest</li>
                             </ul>
                         </div>
                         <div className="items-center justify-center flex">
-                            <TbTriangleFilled onClick={inc}/>
+                            <TbTriangleFilled onClick={inc} className="text-black "/>
                         </div>
-                        <div className={!button ? "items-center justify-center flex" : "hidden"}>
+                        <div className={!button ? "items-center justify-center flex text-black " : "hidden"}>
                             {pad(Math.floor(sessionTimerLength/60))}:{pad(sessionTimerLength%60)}
                         </div>
-                        <div className={button ? "items-center justify-center flex" : "hidden"}>
+                        <div className={button ? "items-center justify-center flex text-black " : "hidden"}>
                             {pad(Math.floor(restTimerLength/60))}:{pad(restTimerLength%60)}
                         </div>
-                        <div className="items-center justify-center flex">
+                        <div className="items-center justify-center flex text-black ">
                             <TbTriangleInvertedFilled onClick={dec}/>
                         </div>
                         <div onClick={resetTodefault} className="items-center justify-center flex cursor-pointer text-red font-bold">
@@ -353,3 +350,5 @@ const Timer = () => {
     )
 }
 export default Timer;
+
+
